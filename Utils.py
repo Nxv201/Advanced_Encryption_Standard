@@ -42,6 +42,25 @@ InvSbox = (
 Rcon = (0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36)
 
 
+def preprocess_data_input(text):
+    """
+    Tiền xử lý, chia chuỗi thành các block
+    """
+    hex_string = text.encode("utf-8").hex()
+
+
+
+def to_ascii(hex_string):
+    """
+    Chuyển hex string thanh chuoi ascii
+    """
+    if hex_string[:2] == "0x":
+        hex_string = hex_string[2:]
+    bytes_obj = bytes.fromhex(hex_string)
+    ascii_string = bytes_obj.decode("ASCII")
+    return ascii_string
+
+
 def text2bytearray(text):
     """
     Hàm chuyển string thành một byte array
