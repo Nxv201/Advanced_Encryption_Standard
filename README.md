@@ -5,10 +5,10 @@ This is an AES encryption and decryption project done during my time at the **Ac
 
 ## Install
 
-Via Composer
+Install all package requirements
 
 ``` bash
-$ composer require :vendor/:package_name
+$ pip install -r requirements.txt
 ```
 
 ## Usage
