@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QFileDialog
-
+import Utils
 class AESWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -37,7 +37,7 @@ class AESWindow(QMainWindow):
         layout.addWidget(self.plain_label)
         layout.addWidget(self.plain_text)
 
-        # Thêm button "Import" vào Tab Decrypt
+        # Thêm button "Import" vào Tab Encrypt
         hbox = QHBoxLayout()
         hbox.addWidget(self.import_plain_text_button)
         hbox.addStretch()
@@ -72,6 +72,8 @@ class AESWindow(QMainWindow):
         self.decrypt_button.clicked.connect(self.decrypt)
         self.import_cipher_text_button = QPushButton("Import")
         self.import_cipher_text_button.clicked.connect(self.import_cipher_text_file)
+        self.export_plain_text_button = QPushButton("Export")
+        self.export_plain_text_button.clicked.connect(self.export_plain_text_file)
 
         layout2 = QVBoxLayout()
         layout2.addWidget(self.cipher_text_label2)
@@ -88,7 +90,10 @@ class AESWindow(QMainWindow):
 
         layout2.addWidget(self.plaintext_label2)
         layout2.addWidget(self.plaintext_edit2)
-
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.export_plain_text_button)
+        hbox.addStretch()
+        layout2.addLayout(hbox)
         layout2.addWidget(self.decrypt_button)
 
         self.decrypt_tab.setLayout(layout2)
