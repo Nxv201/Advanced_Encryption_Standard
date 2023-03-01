@@ -1,5 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QFileDialog
+from PyQt6 import QtWidgets
 import Utils
 class AESWindow(QMainWindow):
     def __init__(self):
@@ -103,7 +104,12 @@ class AESWindow(QMainWindow):
         self.setWindowTitle('AES Encryption/Decryption')
 
     def encrypt(self):
-        # Code cho chức năng Encrypt
+        # Xu ly su kien encrypt
+        plaintext = self.plain_text.toPlainText()
+        if plaintext == "":
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage("Plaintext empty!")
+            error_dialog.exec()
         pass
 
     def decrypt(self):
