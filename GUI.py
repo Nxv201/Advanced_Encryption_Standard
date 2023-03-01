@@ -109,7 +109,7 @@ class AESWindow(QMainWindow):
         key = self.key_text.toPlainText()
         if plaintext == "" or key == "":
             error_dialog = QtWidgets.QErrorMessage()
-            error_dialog.showMessage("Plaintext empty!")
+            error_dialog.showMessage("Plaintext or key field empty!")
             error_dialog.exec()
         else:
             ciphertext = Utils.encrypt(plaintext, key)
@@ -117,8 +117,17 @@ class AESWindow(QMainWindow):
 
 
     def decrypt(self):
-        # Code cho chức năng Decrypt
-        pass
+        # Xu ly su kien encrypt
+        ciphertext = self.cipher_text_edit2.toPlainText()
+        key = self.key_text2.toPlainText()
+        if ciphertext == "" or key == "":
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage("Ciphertext or key field empty!")
+            error_dialog.exec()
+        else:
+            plaintext = Utils.decrypt(ciphertext, key)
+            self.plaintext_edit2.setText(plaintext)
+
 
     def import_cipher_text_file(self):
         # Code cho chức năng Import file
