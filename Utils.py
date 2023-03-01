@@ -464,8 +464,6 @@ if __name__ == "__main__":
     PLAINTEXT = '0x00112233445566778899aabbccddeeff'
     state = encrypt(PLAINTEXT, master_key)
     # print(type(state))
-    state = state.astype(np.uint8).tobytes().hex()
     print("encryt: ", state)
     state = decrypt(state, master_key)
-    state = state.astype(np.uint8).tobytes().hex()
     print("decryt: ", state)
