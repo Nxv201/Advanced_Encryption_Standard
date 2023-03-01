@@ -106,11 +106,15 @@ class AESWindow(QMainWindow):
     def encrypt(self):
         # Xu ly su kien encrypt
         plaintext = self.plain_text.toPlainText()
-        if plaintext == "":
+        key = self.key_text.toPlainText()
+        if plaintext == "" or key == "":
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage("Plaintext empty!")
             error_dialog.exec()
-        pass
+        else:
+            ciphertext = Utils.encrypt(plaintext, key)
+            self.ciphertext_edit.setText(ciphertext)
+
 
     def decrypt(self):
         # Code cho chức năng Decrypt
