@@ -157,7 +157,7 @@ class AESWindow(QMainWindow):
         file_name, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Text Files (*.txt)")
         if file_name:
             with open(file_name, "r") as f:
-                self.cipher_text.setText(f.read())
+                self.cipher_text_edit2.setText(f.read())
 
     def import_plain_text_file(self):
         # Code cho chức năng Import file
