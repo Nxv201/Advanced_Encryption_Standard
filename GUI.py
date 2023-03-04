@@ -2,6 +2,9 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QFileDialog
 from PyQt6 import QtWidgets
 import Utils
+import time
+
+
 class AESWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -27,6 +30,8 @@ class AESWindow(QMainWindow):
         self.ciphertext_label = QLabel('Ciphertext:')
         self.ciphertext_edit = QTextEdit()
 
+        self.take_time = QLabel("Take time: 0 seconds")
+
         self.encrypt_button = QPushButton("Encrypt")
         self.encrypt_button.clicked.connect(self.encrypt)
         self.import_plain_text_button = QPushButton("Import")
@@ -51,6 +56,7 @@ class AESWindow(QMainWindow):
         hbox.addWidget(self.export_cipher_text_button)
         hbox.addStretch()
         layout.addLayout(hbox)
+        layout.addWidget(self.take_time)
         layout.addWidget(self.encrypt_button)
         self.encrypt_tab.setLayout(layout)
 
@@ -65,6 +71,8 @@ class AESWindow(QMainWindow):
         self.key_label2 = QLabel("Key")
         self.key_text2 = QTextEdit()
         self.key_text2.setFixedHeight(50)
+
+        self.take_time2 = QLabel("Take time: 0 seconds")
 
         self.plaintext_label2 = QLabel('Plaintext:')
         self.plaintext_edit2 = QTextEdit()
@@ -95,6 +103,7 @@ class AESWindow(QMainWindow):
         hbox.addWidget(self.export_plain_text_button)
         hbox.addStretch()
         layout2.addLayout(hbox)
+        layout2.addWidget(self.take_time2)
         layout2.addWidget(self.decrypt_button)
 
         self.decrypt_tab.setLayout(layout2)
@@ -104,29 +113,43 @@ class AESWindow(QMainWindow):
         self.setWindowTitle('AES Encryption/Decryption')
 
     def encrypt(self):
-        # Xu ly su kien encrypt
+        """
+        Hàm xử lý khi bấm nút encrypt
+        :return: thời gian mã hóa
+        """
         plaintext = self.plain_text.toPlainText()
         key = self.key_text.toPlainText()
         if plaintext == "" or key == "":
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage("Plaintext or key field empty!")
             error_dialog.exec()
+            self.take_time.setText(f"Take time: 0 seconds")
         else:
+            start_time = time.time()
             ciphertext = Utils.encrypt(plaintext, key)
+            end_time = time.time()
             self.ciphertext_edit.setText(ciphertext)
+            self.take_time.setText(f"Take time: {round(end_time - start_time, 4)} seconds")
 
 
     def decrypt(self):
-        # Xu ly su kien encrypt
+        """
+        Hàm xử lý khi bấm nút decrypt
+        :return: thời gian mã hóa
+        """
         ciphertext = self.cipher_text_edit2.toPlainText()
         key = self.key_text2.toPlainText()
         if ciphertext == "" or key == "":
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage("Ciphertext or key field empty!")
             error_dialog.exec()
+            self.take_time2.setText(f"Take time: 0 seconds")
         else:
+            start_time = time.time()
             plaintext = Utils.decrypt(ciphertext, key)
+            end_time = time.time()
             self.plaintext_edit2.setText(plaintext)
+            self.take_time2.setText(f"Take time: {round(end_time - start_time, 4)} seconds")
 
 
     def import_cipher_text_file(self):
