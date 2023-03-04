@@ -12,36 +12,31 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage
+To use in command line mode
+``` bash
+$ python CLI.py
+```
 
+For use in GUI mode
+``` bash
+$ python GUI.py
+```
 
+## Fearture
 
-## Change log
+- 128/192/256 bits Encryption/Decryption
 
+## Testing data
 
-
-## Testing
-
-
-
-## Security
-
+- Plaintext: 0x00112233445566778899aabbccddeeff
+- Key 128bit: 000102030405060708090a0b0c0d0e0f
+  - Ciphertext: 69c4e0d86a7b0430d8cdb78070b4c55a
+- Key 192bit: 000102030405060708090a0b0c0d0e0f1011121314151617
+  - Ciphertext: dda97ca4864cdfe06eaf70a0ec0d7191
+- Key 256bit: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+  - Ciphertext: 8ea2b7ca516745bfeafc49904b496089
 
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-[ico-version]: https://img.shields.io/packagist/v/:vendor/:package_name.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/:vendor/:package_name/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/:vendor/:package_name.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/:vendor/:package_name.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/:vendor/:package_name.svg?style=flat-square
-
-[link-packagist]: https://packagist.org/packages/:vendor/:package_name
-[link-travis]: https://travis-ci.org/:vendor/:package_name
-[link-scrutinizer]: https://scrutinizer-ci.com/g/:vendor/:package_name/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/:vendor/:package_name
-[link-downloads]: https://packagist.org/packages/:vendor/:package_name
-[link-author]: https://github.com/:author_username
-[link-contributors]: ../../contributors
+The GNU General Public License Verion 3 (GNU v3). Please see [License File](LICENSE) for more information.
