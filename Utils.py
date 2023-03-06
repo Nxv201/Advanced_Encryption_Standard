@@ -382,10 +382,10 @@ def encrypt(plaintext, master_key):
     # Round đầu tiên
     sub_key = round_keys[0:4]
     key_matrix = np.asarray(sub_key)       # ndarray (4 , 4)
-    print("input: \n", plain_state.astype(np.uint8).tobytes().hex())
+    # print("input: \n", plain_state.astype(np.uint8).tobytes().hex())
     state_matrix = add_round_key(plain_state, key_matrix)  # k0-k3
 
-    print("R1: \n", state_matrix.astype(np.uint8).tobytes().hex())
+    # print("R1: \n", state_matrix.astype(np.uint8).tobytes().hex())
     # Các round tiếp theo
     for i in range(1, Nr):
         # Lấy khóa con
@@ -393,19 +393,19 @@ def encrypt(plaintext, master_key):
         key_matrix = np.asarray(sub_key)    # ndarray (4 , 4)
 
         state_matrix = sub_bytes(state_matrix)      # sub bytes
-        print(f"R{i} sub bytes: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} sub bytes: \n", state_matrix.astype(np.uint8).tobytes().hex())
         state_matrix = shift_rows(state_matrix)     # shift rows
-        print(f"R{i} shift rows: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} shift rows: \n", state_matrix.astype(np.uint8).tobytes().hex())
         state_matrix = mix_columns(state_matrix)    # mix columns
-        print(f"R{i} mix cols: \n", state_matrix.astype(np.uint8).tobytes().hex())
-        print(f"R{i} sub_key: \n", key_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} mix cols: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} sub_key: \n", key_matrix.astype(np.uint8).tobytes().hex())
         state_matrix = add_round_key(state_matrix, key_matrix)  # add round key
-        print(f"R{i} add round key: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} add round key: \n", state_matrix.astype(np.uint8).tobytes().hex())
 
     # Round cuối
     sub_key = round_keys[-4:]  # Lấy khóa con
     key_matrix = np.asarray(sub_key)
-    print("Matrix_key: \n", key_matrix.astype(np.uint8).tobytes().hex())
+    # print("Matrix_key: \n", key_matrix.astype(np.uint8).tobytes().hex())
 
     state_matrix = sub_bytes(state_matrix)
     state_matrix = shift_rows(state_matrix)
@@ -432,23 +432,23 @@ def decrypt(ciphertext, master_key):
     # Round đầu tiên
     sub_key = round_keys[-4:]
     key_matrix = np.asarray(sub_key)  # ndarray (4 , 4)
-    print("input decrypt: \n", cipher_state.astype(np.uint8).tobytes().hex())
+    # print("input decrypt: \n", cipher_state.astype(np.uint8).tobytes().hex())
     state_matrix = add_round_key(cipher_state, key_matrix)
 
     # Các round tiếp theo
     for i in range(Nr-1, 0, -1):
         sub_key = round_keys[4 * i: 4 * (i + 1)]
         key_matrix = np.asarray(sub_key)  # ndarray (4 , 4)
-        print("matrix_key: \n", key_matrix.astype(np.uint8).tobytes().hex())
+        # print("matrix_key: \n", key_matrix.astype(np.uint8).tobytes().hex())
 
         state_matrix = inv_shift_rows(state_matrix)             # invert shift rows
-        print(f"R{i} invert shift rows: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} invert shift rows: \n", state_matrix.astype(np.uint8).tobytes().hex())
         state_matrix = inv_sub_bytes(state_matrix)              # invert sub bytes
-        print(f"R{i} invert sub bytes: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} invert sub bytes: \n", state_matrix.astype(np.uint8).tobytes().hex())
         state_matrix = add_round_key(state_matrix, key_matrix)  # add round key
-        print(f"R{i} add round key: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} add round key: \n", state_matrix.astype(np.uint8).tobytes().hex())
         state_matrix = inv_mix_columns(state_matrix)            # invert mix columns
-        print(f"R{i} invert mix cols: \n", state_matrix.astype(np.uint8).tobytes().hex())
+        # print(f"R{i} invert mix cols: \n", state_matrix.astype(np.uint8).tobytes().hex())
 
     # Round cuối
     sub_key = round_keys[: 4]
