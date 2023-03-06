@@ -126,7 +126,13 @@ class AESWindow(QMainWindow):
             self.take_time.setText(f"Take time: 0 seconds")
         else:
             start_time = time.time()
-            ciphertext = Utils.encrypt(plaintext, key)
+            blocks = Utils.preprocess_data_input(plaintext)
+            cipher_blocks = []
+            for block in blocks:
+                tmp = Utils.encrypt(block, key)
+                cipher_blocks.append(tmp)
+            cipher_blocks = [Utils.to_ascii(i) for i in cipher_blocks]  # chuyen hex sang ki tu
+            ciphertext = "".join(cipher_blocks)
             end_time = time.time()
             self.ciphertext_edit.setText(ciphertext)
             self.take_time.setText(f"Take time: {round(end_time - start_time, 4)} seconds")
@@ -146,11 +152,16 @@ class AESWindow(QMainWindow):
             self.take_time2.setText(f"Take time: 0 seconds")
         else:
             start_time = time.time()
-            plaintext = Utils.decrypt(ciphertext, key)
+            blocks = Utils.preprocess_data_input(ciphertext)
+            plain_blocks = []
+            for block in blocks:
+                tmp = Utils.decrypt(block, key)
+                plain_blocks.append(tmp)
+            plain_blocks = [Utils.to_ascii(i) for i in plain_blocks]
+            plaintext = "".join(plain_blocks)
             end_time = time.time()
             self.plaintext_edit2.setText(plaintext)
             self.take_time2.setText(f"Take time: {round(end_time - start_time, 4)} seconds")
-
 
     def import_cipher_text_file(self):
         # Code cho chức năng Import file
