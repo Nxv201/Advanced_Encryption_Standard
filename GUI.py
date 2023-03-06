@@ -158,7 +158,7 @@ class AESWindow(QMainWindow):
                 tmp = Utils.decrypt(block, key)
                 plain_blocks.append(tmp)
             plain_blocks = [Utils.to_ascii(i) for i in plain_blocks]
-            plaintext = "".join(plain_blocks)
+            plaintext = "".join(plain_blocks).replace("\x00", "")
             end_time = time.time()
             self.plaintext_edit2.setText(plaintext)
             self.take_time2.setText(f"Take time: {round(end_time - start_time, 4)} seconds")
