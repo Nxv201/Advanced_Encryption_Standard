@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 Sbox = (
@@ -46,8 +47,16 @@ def preprocess_data_input(text):
     """
     Tiền xử lý, chia chuỗi thành các block
     """
-    hex_string = text.encode("utf-8").hex()
+    if text[:2] == "0x":  # chuoi dau vao la hex
+        tmp = text[2:]
+    else:   # chuoi dau vao la string
+        tmp = text.encode("iso-8859-1").hex()
 
+    leng = len(tmp) // 32
+    blocks = [tmp[32 * i: 32 * (i + 1)] for i in range(leng)]
+    if tmp[32 * leng:] != "":
+        blocks.append(tmp[32 * leng:])
+    return blocks
 
 
 def to_ascii(hex_string):
@@ -57,7 +66,7 @@ def to_ascii(hex_string):
     if hex_string[:2] == "0x":
         hex_string = hex_string[2:]
     bytes_obj = bytes.fromhex(hex_string)
-    ascii_string = bytes_obj.decode("ASCII")
+    ascii_string = bytes_obj.decode("iso-8859-1")
     return ascii_string
 
 
@@ -67,16 +76,13 @@ def text2bytearray(text):
     :param text: string
     :return: byte array
     """
-
-    tmp = text.split("0x")
-    if tmp[0] == "":
-        tmp = tmp[1]
-    else:
-        tmp = tmp[0]
-    len_tmp = len(tmp)//2
-    tmp = tmp.encode('UTF-8')
+    tmp = text
+    if text[:2] == "0x":
+        tmp = text[2:]
+    # len_tmp = len(tmp)//2
+    # tmp = tmp.encode('UTF-8')
     tmp = int(tmp, 16)  # Chuyển chuỗi thành int
-    array = [(tmp >> 8 * (len_tmp - 1 - i)) & 0xff for i in range(len_tmp)]
+    array = [(tmp >> 8 * (16 - 1 - i)) & 0xff for i in range(16)]
     return array
 
 
