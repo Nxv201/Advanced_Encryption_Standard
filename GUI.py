@@ -22,10 +22,20 @@ class AESWindow(QMainWindow):
         # Thiết kế giao diện cho Tab Encrypt
         self.plain_label = QLabel("Plain Text")
         self.plain_text = QTextEdit()
-
         self.key_label = QLabel("Key")
-        self.key_text = QTextEdit()
+        self.key_text = QtWidgets.QLineEdit()
+        self.key_text.setMaxLength(32)
         self.key_text.setFixedHeight(50)
+        self.radio_button_128 = QtWidgets.QRadioButton("128bits")
+        self.radio_button_128.setChecked(True)
+        self.radio_button_128.type = 128
+        self.radio_button_128.released.connect(self.on_clicked)
+        self.radio_button_192 = QtWidgets.QRadioButton("192bits")
+        self.radio_button_192.type = 192
+        self.radio_button_192.released.connect(self.on_clicked)
+        self.radio_button_256 = QtWidgets.QRadioButton("256bits")
+        self.radio_button_256.type = 256
+        self.radio_button_256.released.connect(self.on_clicked)
 
         self.ciphertext_label = QLabel('Ciphertext:')
         self.ciphertext_edit = QTextEdit()
@@ -50,6 +60,12 @@ class AESWindow(QMainWindow):
         layout.addLayout(hbox)
         layout.addWidget(self.key_label)
         layout.addWidget(self.key_text)
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.radio_button_128)
+        hbox.addWidget(self.radio_button_192)
+        hbox.addWidget(self.radio_button_256)
+        hbox.addStretch()
+        layout.addLayout(hbox)
         layout.addWidget(self.ciphertext_label)
         layout.addWidget(self.ciphertext_edit)
         hbox = QHBoxLayout()
@@ -111,6 +127,11 @@ class AESWindow(QMainWindow):
         # Thiết lập các thuộc tính khác của UI
         self.setGeometry(100, 100, 600, 400)
         self.setWindowTitle('AES Encryption/Decryption')
+
+    def on_clicked(self):
+        radio_button = self.sender()
+        leng = int(radio_button.type)//4
+        self.key_text.setMaxLength(leng)
 
     def encrypt(self):
         """
