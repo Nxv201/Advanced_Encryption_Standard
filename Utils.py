@@ -77,10 +77,10 @@ def text2bytearray(text):
     tmp = text
     if text[:2] == "0x":
         tmp = text[2:]
-    # len_tmp = len(tmp)//2
+    len_tmp = len(tmp)//2
     # tmp = tmp.encode('UTF-8')
     tmp = int(tmp, 16)  # Chuyển chuỗi thành int
-    array = [(tmp >> 8 * (16 - 1 - i)) & 0xff for i in range(16)]
+    array = [(tmp >> 8 * (len_tmp - 1 - i)) & 0xff for i in range(len_tmp)]
     return array
 
 
@@ -123,11 +123,15 @@ def key_expansion(master_key):
     :param key: là một chuỗi hex. VD: '0x0f1571c947d9e8590cb7add6af7f6798'
     :return: danh sách các từ khóa
     """
-    key = text2bytearray(master_key)
+    tmp = master_key
+    if master_key[:2] == "0x":
+        tmp = master_key[2:]
+    len_tmp = len(tmp)//2
+    tmp = int(tmp, 16)  # Chuyển chuỗi thành int
+    key = [(tmp >> 8 * (len_tmp - 1 - i)) & 0xff for i in range(len_tmp)]
 
     # khai báo các thông số cần thiết
     Nk = len(key) // 4
-    # print("len key: ", Nk)
     Nb = 4
     Nr = Nk + 6     # số lần lặp
 
@@ -408,6 +412,7 @@ def encrypt(plaintext, master_key):
     state_matrix = sub_bytes(state_matrix)
     state_matrix = shift_rows(state_matrix)
     state_matrix = add_round_key(state_matrix, key_matrix)
+    print("state_matrix: \n", state_matrix.astype(np.uint8).tobytes().hex())
     return state_matrix.astype(np.uint8).tobytes().hex()
 
 
