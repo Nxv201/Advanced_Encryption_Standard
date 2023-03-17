@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QTextEdit, QFileDialog
-from PyQt6 import QtWidgets
+from PyQt6 import QtWidgets, QtGui
 import Utils
 import time
 
@@ -22,24 +22,25 @@ class AESWindow(QMainWindow):
         # Thiết kế giao diện cho Tab Encrypt
         self.plain_label = QLabel("Plain Text")
         self.plain_text = QTextEdit()
+        self.plain_text.setAcceptRichText(False)
         self.key_label = QLabel("Key")
         self.key_text = QtWidgets.QLineEdit()
         self.key_text.setMaxLength(32)
         self.key_text.setFixedHeight(50)
         self.radio_button_128 = QtWidgets.QRadioButton("128bits")
         self.radio_button_128.setChecked(True)
-        self.radio_button_128.type = 128
+        self.radio_button_128.length = 32
         self.radio_button_128.released.connect(self.on_clicked)
         self.radio_button_192 = QtWidgets.QRadioButton("192bits")
-        self.radio_button_192.type = 192
+        self.radio_button_192.length = 48
         self.radio_button_192.released.connect(self.on_clicked)
         self.radio_button_256 = QtWidgets.QRadioButton("256bits")
-        self.radio_button_256.type = 256
+        self.radio_button_256.length = 64
         self.radio_button_256.released.connect(self.on_clicked)
 
         self.ciphertext_label = QLabel('Ciphertext:')
         self.ciphertext_edit = QTextEdit()
-
+        self.ciphertext_edit.setAcceptRichText(False)
         self.take_time = QLabel("Take time: 0 seconds")
 
         self.encrypt_button = QPushButton("Encrypt")
@@ -83,15 +84,32 @@ class AESWindow(QMainWindow):
         # Thiết kế giao diện cho Tab Decrypt
         self.cipher_text_label2 = QLabel("Cipher Text")
         self.cipher_text_edit2 = QTextEdit()
+        self.cipher_text_edit2.setAcceptRichText(False)
 
         self.key_label2 = QLabel("Key")
-        self.key_text2 = QTextEdit()
+        self.key_text2 = QtWidgets.QLineEdit()
+        self.key_text2.setMaxLength(32)
         self.key_text2.setFixedHeight(50)
+        self.radio_button_128_2 = QtWidgets.QRadioButton("128bits")
+        self.radio_button_128_2.setObjectName("128")
+        self.radio_button_128_2.setChecked(True)
+        self.radio_button_128_2.length = 32
+        self.radio_button_128_2.released.connect(self.on_clicked)
+        self.radio_button_192_2 = QtWidgets.QRadioButton("192bits")
+        self.radio_button_192_2.setObjectName("192")
+        self.radio_button_192_2.length = 48
+        self.radio_button_192_2.released.connect(self.on_clicked)
+        self.radio_button_256_2 = QtWidgets.QRadioButton("256bits")
+        self.radio_button_256_2.setObjectName("256")
+        self.radio_button_256_2.length = 64
+        self.radio_button_256_2.released.connect(self.on_clicked)
+
 
         self.take_time2 = QLabel("Take time: 0 seconds")
 
         self.plaintext_label2 = QLabel('Plaintext:')
         self.plaintext_edit2 = QTextEdit()
+        self.plaintext_edit2.setAcceptRichText(False)
 
         self.decrypt_button = QPushButton("Decrypt")
         self.decrypt_button.clicked.connect(self.decrypt)
@@ -112,6 +130,12 @@ class AESWindow(QMainWindow):
 
         layout2.addWidget(self.key_label2)
         layout2.addWidget(self.key_text2)
+        hbox2 = QHBoxLayout()
+        hbox2.addWidget(self.radio_button_128_2)
+        hbox2.addWidget(self.radio_button_192_2)
+        hbox2.addWidget(self.radio_button_256_2)
+        hbox2.addStretch()
+        layout2.addLayout(hbox2)
 
         layout2.addWidget(self.plaintext_label2)
         layout2.addWidget(self.plaintext_edit2)
@@ -125,13 +149,18 @@ class AESWindow(QMainWindow):
         self.decrypt_tab.setLayout(layout2)
 
         # Thiết lập các thuộc tính khác của UI
-        self.setGeometry(100, 100, 600, 400)
+        self.setGeometry(100, 100, 650, 400)
         self.setWindowTitle('AES Encryption/Decryption')
 
     def on_clicked(self):
         radio_button = self.sender()
-        leng = int(radio_button.type)//4
-        self.key_text.setMaxLength(leng)
+        name = radio_button.objectName()
+        if name == "128" or name == "192" or name == "256":
+            self.key_text2.setMaxLength(radio_button.length)
+        else:
+            self.key_text.setMaxLength(radio_button.length)
+
+
 
     def encrypt(self):
         """
@@ -139,13 +168,28 @@ class AESWindow(QMainWindow):
         :return: thời gian mã hóa
         """
         plaintext = self.plain_text.toPlainText()
-        key = self.key_text.toPlainText()
+        key = self.key_text.text()
+        cond = not(len(key) == 32 or len(key) == 48 or len(key) == 64)
+
         if plaintext == "" or key == "":
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage("Plaintext or key field empty!")
             error_dialog.exec()
             self.take_time.setText(f"Take time: 0 seconds")
+        elif cond:
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage("Key must be 128 or 192 or 256bits")
+            error_dialog.exec()
+            self.take_time.setText(f"Take time: 0 seconds")
         else:
+            try:
+                int(key, 16)
+            except:
+                error_dialog = QtWidgets.QErrorMessage()
+                error_dialog.showMessage("Key must be in hex!")
+                error_dialog.exec()
+                self.take_time.setText(f"Take time: 0 seconds")
+                return
             start_time = time.time()
             blocks = Utils.preprocess_data_input(plaintext)
             cipher_blocks = []
@@ -165,13 +209,27 @@ class AESWindow(QMainWindow):
         :return: thời gian mã hóa
         """
         ciphertext = self.cipher_text_edit2.toPlainText()
-        key = self.key_text2.toPlainText()
+        key = self.key_text2.text()
+        cond = not (len(key) == 32 or len(key) == 48 or len(key) == 64)
+
         if ciphertext == "" or key == "":
             error_dialog = QtWidgets.QErrorMessage()
             error_dialog.showMessage("Ciphertext or key field empty!")
             error_dialog.exec()
             self.take_time2.setText(f"Take time: 0 seconds")
+        elif cond:
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage("Key must be 128 or 192 or 256bits")
+            error_dialog.exec()
+            self.take_time.setText(f"Take time: 0 seconds")
         else:
+            try:
+                int(key, 16)
+            except:
+                error_dialog = QtWidgets.QErrorMessage()
+                error_dialog.showMessage("Key must be in hex!")
+                error_dialog.exec()
+                self.take_time.setText(f"Take time: 0 seconds")
             start_time = time.time()
             blocks = Utils.preprocess_data_input(ciphertext)
             plain_blocks = []
@@ -215,6 +273,8 @@ class AESWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    font = QtGui.QFont("Montserrat", 12)
+    app.setFont(font)
     ex = AESWindow()
     ex.show()
     sys.exit(app.exec())

@@ -77,10 +77,10 @@ def text2bytearray(text):
     tmp = text
     if text[:2] == "0x":
         tmp = text[2:]
-    len_tmp = len(tmp)//2
+    # len_tmp = len(tmp)//2
     # tmp = tmp.encode('UTF-8')
     tmp = int(tmp, 16)  # Chuyển chuỗi thành int
-    array = [(tmp >> 8 * (len_tmp - 1 - i)) & 0xff for i in range(len_tmp)]
+    array = [(tmp >> 8 * (16 - 1 - i)) & 0xff for i in range(16)]
     return array
 
 
@@ -414,7 +414,7 @@ def encrypt(plaintext, master_key):
     state_matrix = sub_bytes(state_matrix)
     state_matrix = shift_rows(state_matrix)
     state_matrix = add_round_key(state_matrix, key_matrix)
-    print("state_matrix: \n", state_matrix.astype(np.uint8).tobytes().hex())
+    #print("state_matrix: \n", state_matrix.astype(np.uint8).tobytes().hex())
     return state_matrix.astype(np.uint8).tobytes().hex()
 
 
