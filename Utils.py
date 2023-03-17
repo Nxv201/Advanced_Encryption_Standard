@@ -126,6 +126,8 @@ def key_expansion(master_key):
     tmp = master_key
     if master_key[:2] == "0x":
         tmp = master_key[2:]
+    if not (len(tmp) == 32 or len(tmp) == 48 or len(tmp) == 64):
+        raise Exception("Key must be 128 or 192 or 256bits ")
     len_tmp = len(tmp)//2
     tmp = int(tmp, 16)  # Chuyển chuỗi thành int
     key = [(tmp >> 8 * (len_tmp - 1 - i)) & 0xff for i in range(len_tmp)]
